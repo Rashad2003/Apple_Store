@@ -124,12 +124,22 @@ const ShopContextProvider = (props) => {
 
   const clearCart = async () => {
     setCartItems({});
-    localStorage.removeItem("cart"); 
-  };
+    localStorage.removeItem("cart");
+    if (token) {
+      try {
+        await axios.post(
+          backendUrl + "/api/cart/clear", // Call backend API
+          {},
+          { headers: { token } }
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to clear cart");
+      }
+    }
 
-  // useEffect(() => {
-  //   clearCart();
-  // }, []);
+    toast.success("Cart cleared successfully!");
+  };
 
   useEffect(() => {
     getProductData();
